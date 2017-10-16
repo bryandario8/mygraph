@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My graph</title>
+	<style>
+			body { margin: 0; }
+			canvas { width: 100%; height: 100% }
+	</style>
+</head>
+<body>
+	<script src="js/three.js"></script>
+	<!--<script src="src/materials/MeshLambertMaterial.js"></script>-->
+	<script>
+		
+	    //var THREE = require('three');
+		var scene = new THREE.Scene();  // Crea un objeto de escena Three.js
+		scene.background = new THREE.Color( 0xf0f0f0 );
+		
+		var camera = new THREE.PerspectiveCamera( 25, window.innerWidth/window.innerHeight, 0.1, 1000 ); // Define el campo visual vertical en grados, define la relación de aspecto, define el plano cercano del frustrum de la camara, define el pano lejano
+		camera.position.set(0,4,50); // Define posición de la cámara en XYZ
+		camera.lookAt( scene.position/*new THREE.Vector3(0,0,0)*/);
+
+		// Grid para la base
+		var grid = new THREE.GridHelper(100, 50);
+		scene.add(grid);
+
+		var renderer = new THREE.WebGLRenderer({ alpha: true });   // Representador WebGL 
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		document.body.appendChild( renderer.domElement );  // Add al Dom 
+
+		// Fuente de luz necesaria debido a MeshPhongMaterial
+	    var pointLight = new THREE.PointLight(0xFFFFFF); // Color de la fuente de Luz (Blanca)
+	    pointLight.position.set(100, 100, 250); // Posicion de la fuente de luz en (x, y, z).
+	    scene.add(pointLight); // Add a la scene.
+
+		// Cube 
+		var geometryCube = new THREE.BoxGeometry( 3, 3, 3 );  // Elemento Geometry para un cubo
+		var materialCube = new THREE.MeshLambertMaterial( { color: 'blue', overdraw: 0.5 } ); // Aplica un material
+		var cube = new THREE.Mesh( geometryCube, materialCube ); // Crea una malla donde se agrega el Geometry y Material definidos antes
+		cube.position.y += 1.5;  // Moviendo al cubo del origen a (0,1,0)
+		cube.position.z += 20;
+		cube.rotation.y -= 0.2;  // Rotando en y
+
+		scene.add( cube );
+
+		// Sphere
+		var texture = THREE.TextureLoader("textures/sprite.png");
+		var geometrySphere = new THREE.SphereGeometry(2, 16,16); // Define radio, numero de segmentosverticales, mumero de anillos hoixontales
+		var materialSphere = new THREE.MeshPhongMaterial( {map: texture} ); 
+		var sphere = new THREE.Mesh( geometrySphere, materialSphere );
+		sphere.position.y += 2;
+		sphere.position.x -= 8;
+		sphere.position.z += 5;
+
+		scene.add( sphere );
+
+		//camera.position.z = 5;
+
+		/*var animate = function () {
+			requestAnimationFrame( animate );
+
+			cube.rotation.x += 0.1;
+			cube.rotation.y += 0.1;
+
+			renderer.render(scene, camera);
+		};*/
+				
+		renderer.render(scene, camera);
+
+		//animate();
+	</script>
+</body>
+</html>
